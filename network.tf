@@ -8,7 +8,7 @@ resource "aws_vpc" "lab-vpc01" {
 }
 
 # Create private subnet
-resource "aws_subnet1" "private_subnet1" {
+resource "aws_subnet" "private_subnet1" {
   vpc_id     = aws_vpc.lab-vpc01.id 
   cidr_block = "10.0.2.0/24"
 
