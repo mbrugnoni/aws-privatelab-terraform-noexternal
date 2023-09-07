@@ -1,4 +1,4 @@
- Create our lab VPC
+# Create our lab VPC
 resource "aws_vpc" "lab-vpc01" {
  cidr_block = "10.0.0.0/18"
  
