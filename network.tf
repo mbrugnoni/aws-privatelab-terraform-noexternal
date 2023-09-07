@@ -1,6 +1,8 @@
 # Create our lab VPC
 resource "aws_vpc" "lab-vpc01" {
  cidr_block = "10.0.0.0/18"
+ enable_dns_hostnames = true
+ enable_dns_support = true
  
  tags = {
    Name = "lab-vpc01"
