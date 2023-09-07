@@ -1,37 +1,48 @@
-resource "aws_vpc" "example" {
-  cidr_block = "10.0.0.0/16" # Replace with your VPC's CIDR block
+# Create our lab VPC
+resource "aws_vpc" "lab-vpc01" {
+ cidr_block = "10.0.0.0/18"
+ 
+ tags = {
+   Name = "lab-vpc01"
+ }
 }
 
-resource "aws_subnet" "private" {
-  vpc_id                  = aws_vpc.example.id
-  cidr_block              = "10.0.1.0/24" # Replace with your private subnet's CIDR block
-  availability_zone       = "us-east-1a" # Replace with your desired availability zone
-}
+# Create private subnet
+resource "aws_subnet" "private_subnet1" {
+  vpc_id     = aws_vpc.lab-vpc01.id 
+  cidr_block = "10.0.2.0/24"
 
-resource "aws_vpc_endpoint" "example" {
-  vpc_id              = aws_vpc.example.id
-  service_name        = "com.amazonaws.us-east-1.ssm" # Point to AWS Systems Manager (SSM) service
-  vpc_endpoint_type   = "Interface"
-  security_group_ids  = [] # Add security groups if necessary
-  subnet_ids          = [aws_subnet.private.id] # Associate with the private subnet
-}
-
-resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.example.id
-
-  route {
-    cidr_block = "0.0.0.0/0" # Default route for private subnet (Internet Gateway, NAT Gateway, etc.)
-    gateway_id = aws_vpc.example.id # Replace with the appropriate gateway ID if necessary
+  tags = {
+    Name = "private_subnet"
   }
 }
 
-resource "aws_route" "ssm_endpoint" {
-  route_table_id         = aws_route_table.private.id
-  destination_cidr_block = "0.0.0.0/0" # Route all traffic to the SSM endpoint
-  vpc_endpoint_id        = aws_vpc_endpoint.example.id
+# Create VPC endpoint for Session Manager 
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id       = aws_vpc.lab-vpc01.id
+  vpc_endpoint_type = "Interface"
+  service_name = "com.amazonaws.us-east-1.ssm"
+  
+  tags = {
+    Name = "ssm-endpoint"
+  }
 }
 
-output "vpc_endpoint_dns" {
-  value = aws_vpc_endpoint.example.dns_entry.0.dns_name
-}
+# Create route table and add route for SSM endpoint  
+#resource "aws_route_table" "private_subnet_rt" {
+#  vpc_id = aws_vpc.lab-vpc01.id
+#  route {
+#    cidr_block  = "0.0.0.0/0"
+#    vpc_endpoint_id = aws_vpc_endpoint.ssm.id
+#  }
+#
+#  tags = {
+#    Name = "private-subnet-rt"
+#  }
+#}
 
+# Associate route table with private subnet
+#resource "aws_route_table_association" "private_assoc" {
+#  subnet_id      = aws_subnet.private_subnet1.id 
+#  route_table_id = aws_route_table.private_subnet_rt.id
+#}
