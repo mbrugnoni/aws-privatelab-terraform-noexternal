@@ -28,6 +28,29 @@ resource "aws_vpc_endpoint" "ssm" {
   }
 }
 
+# Create VPC endpoint for Session Manager 
+resource "aws_vpc_endpoint" "e2m" {
+  vpc_id       = aws_vpc.lab-vpc01.id
+  vpc_endpoint_type = "Interface"
+  service_name = "com.amazonaws.us-east-1.ec2messages"
+  
+  tags = {
+    Name = "ec2msg-endpoint"
+  }
+}
+
+# Create VPC endpoint for Session Manager 
+resource "aws_vpc_endpoint" "ssmmsg" {
+  vpc_id       = aws_vpc.lab-vpc01.id
+  vpc_endpoint_type = "Interface"
+  service_name = "com.amazonaws.us-east-1.ssmmessages"
+  
+  tags = {
+    Name = "ssmmsg-endpoint"
+  }
+}
+
+
 # Add EC2 instance 
 resource "aws_instance" "lab_vm1" {
   ami           = "ami-051f7e7f6c2f40dc1"
