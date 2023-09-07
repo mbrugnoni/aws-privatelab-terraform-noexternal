@@ -30,7 +30,7 @@ resource "aws_vpc_endpoint" "ssm" {
 
 # Add EC2 instance 
 resource "aws_instance" "lab_vm1" {
-  ami           = "ami-0c55b159cbfafe1f0"
+  ami           = "ami-051f7e7f6c2f40dc1"
   instance_type = "t2.micro"
   
   # Launch into private subnet
