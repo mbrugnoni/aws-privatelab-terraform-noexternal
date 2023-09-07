@@ -9,7 +9,7 @@ resource "aws_vpc" "lab-vpc01" {
 
 # Create private subnet
 resource "aws_subnet1" "private_subnet1" {
-  vpc_id     = aws_vpc.main.id 
+  vpc_id     = aws_vpc.lab-vpc01.id 
   cidr_block = "10.0.2.0/24"
 
   tags = {
@@ -19,7 +19,7 @@ resource "aws_subnet1" "private_subnet1" {
 
 # Create VPC endpoint for Session Manager 
 resource "aws_vpc_endpoint" "ssm" {
-  vpc_id       = aws_vpc.main.id
+  vpc_id       = aws_vpc.lab-vpc01.id
   service_name = "com.amazonaws.us-east-1.ssm"
   
   tags = {
