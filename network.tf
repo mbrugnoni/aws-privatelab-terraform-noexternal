@@ -1,49 +1,33 @@
-# Create our lab VPC
-resource "aws_vpc" "lab-vpc01" {
- cidr_block = "10.0.0.0/18"
- 
- tags = {
-   Name = "lab-vpc01"
- }
+resource "aws_vpc" "example" {
+  cidr_block = "10.0.0.0/16" # Replace with your VPC's CIDR block
 }
 
-# Create private subnet
-resource "aws_subnet" "private_subnet1" {
-  vpc_id     = aws_vpc.lab-vpc01.id 
-  cidr_block = "10.0.2.0/24"
-
-  tags = {
-    Name = "private_subnet"
-  }
+resource "aws_vpc_endpoint" "example" {
+  vpc_id              = aws_vpc.example.id
+  service_name        = "com.amazonaws.us-east-1.ssm" # Point to AWS Systems Manager (SSM) service
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [] # Add security groups if necessary
+  subnet_ids          = [aws_subnet.example.id] # Associate with a subnet
 }
 
-# Create VPC endpoint for Session Manager 
-resource "aws_vpc_endpoint" "ssm" {
-  vpc_id       = aws_vpc.lab-vpc01.id
-  vpc_endpoint_type = "Interface"
-  service_name = "com.amazonaws.us-east-1.ssm"
-  
-  tags = {
-    Name = "ssm-endpoint"
-  }
-}
+resource "aws_route_table" "example" {
+  vpc_id = aws_vpc.example.id
 
-# Create route table and add route for SSM endpoint  
-resource "aws_route_table" "private_subnet_rt" {
-  vpc_id = aws_vpc.lab-vpc01.id
-  depends_on = [aws_vpc_endpoint.ssm]
   route {
-    cidr_block  = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.ssm.id
-  }
-
-  tags = {
-    Name = "private-subnet-rt"
+    cidr_block = "0.0.0.0/0" # This is the default route (Internet Gateway, NAT Gateway, etc.)
+    gateway_id = aws_vpc.example.id # Replace with the appropriate gateway ID if necessary
   }
 }
 
-# Associate route table with private subnet
-resource "aws_route_table_association" "private_assoc" {
-  subnet_id      = aws_subnet.private_subnet1.id 
-  route_table_id = aws_route_table.private_subnet_rt.id
+resource "aws_route_table_association" "example" {
+  subnet_id      = aws_subnet.example.id # Replace with your subnet ID
+  route_table_id = aws_route_table.example.id
 }
+
+resource "aws_subnet" "example" {
+  vpc_id                  = aws_vpc.example.id
+  cidr_block              = "10.0.0.0/24" # Replace with your subnet's CIDR block
+  availability_zone       = "us-east-1a" # Replace with your desired availability zone
+  map_public_ip_on_launch = true
+}
+
