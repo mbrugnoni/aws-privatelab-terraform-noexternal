@@ -32,6 +32,18 @@ resource "aws_vpc_endpoint" "ssm" {
 }
 
 # Create VPC endpoint for Session Manager 
+resource "aws_vpc_endpoint" "ec2ep" {
+  vpc_id       = aws_vpc.lab-vpc01.id
+  vpc_endpoint_type = "Interface"
+  service_name = "com.amazonaws.us-east-1.ec2"
+  private_dns_enabled = true
+  
+  tags = {
+    Name = "ec2-endpoint"
+  }
+}
+
+# Create VPC endpoint for Session Manager 
 resource "aws_vpc_endpoint" "e2m" {
   vpc_id       = aws_vpc.lab-vpc01.id
   vpc_endpoint_type = "Interface"
