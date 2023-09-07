@@ -20,6 +20,7 @@ resource "aws_subnet" "private_subnet1" {
 # Create VPC endpoint for Session Manager 
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id       = aws_vpc.lab-vpc01.id
+  vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ssm"
   
   tags = {
