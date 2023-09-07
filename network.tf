@@ -22,6 +22,7 @@ resource "aws_vpc_endpoint" "ssm" {
   vpc_id       = aws_vpc.lab-vpc01.id
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ssm"
+  private_dns_enabled = true
   
   tags = {
     Name = "ssm-endpoint"
@@ -33,7 +34,7 @@ resource "aws_vpc_endpoint" "e2m" {
   vpc_id       = aws_vpc.lab-vpc01.id
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ec2messages"
-  
+  private_dns_enabled = true  
   tags = {
     Name = "ec2msg-endpoint"
   }
@@ -44,6 +45,7 @@ resource "aws_vpc_endpoint" "ssmmsg" {
   vpc_id       = aws_vpc.lab-vpc01.id
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ssmmessages"
+  private_dns_enabled = true
   
   tags = {
     Name = "ssmmsg-endpoint"
@@ -55,11 +57,11 @@ resource "aws_vpc_endpoint" "ssmmsg" {
 resource "aws_instance" "lab_vm1" {
   ami           = "ami-051f7e7f6c2f40dc1"
   instance_type = "t2.micro"
-  iam_instance_profile = "EC2_role"
-  
+  iam_instance_profile = "AmazonSSMRoleForInstancesQuickSetup"
+    
   # Launch into private subnet
   subnet_id = aws_subnet.private_subnet1.id
-
+  
   tags = {
     Name = "Lab_VM1" 
   }
