@@ -27,3 +27,23 @@ resource "aws_vpc_endpoint" "ssm" {
     Name = "ssm-endpoint"
   }
 }
+
+# Create route table and add route for SSM endpoint  
+resource "aws_route_table" "private_subnet_rt" {
+  vpc_id = aws_vpc.lab-vpc01.id
+
+  route {
+    cidr_block  = "0.0.0.0/0"
+    vpc_endpoint_id = aws_vpc_endpoint.ssm.id
+  }
+
+  tags = {
+    Name = "private-subnet-rt"
+  }
+}
+
+# Associate route table with private subnet
+resource "aws_route_table_association" "private_assoc" {
+  subnet_id      = aws_subnet.private_subnet1.id 
+  route_table_id = aws_route_table.private_subnet_rt.id
+}
