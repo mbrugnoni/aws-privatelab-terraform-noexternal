@@ -25,6 +25,7 @@ resource "aws_vpc_endpoint" "ssm" {
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ssm"
   private_dns_enabled = true
+  subnet_ids = [aws_subnet.private_subnet1.id]
   
   tags = {
     Name = "ssm-endpoint"
@@ -37,6 +38,8 @@ resource "aws_vpc_endpoint" "ec2ep" {
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ec2"
   private_dns_enabled = true
+  subnet_ids = [aws_subnet.private_subnet1.id]
+  
   
   tags = {
     Name = "ec2-endpoint"
@@ -49,6 +52,8 @@ resource "aws_vpc_endpoint" "e2m" {
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ec2messages"
   private_dns_enabled = true  
+  subnet_ids = [aws_subnet.private_subnet1.id]
+
   tags = {
     Name = "ec2msg-endpoint"
   }
@@ -60,6 +65,7 @@ resource "aws_vpc_endpoint" "ssmmsg" {
   vpc_endpoint_type = "Interface"
   service_name = "com.amazonaws.us-east-1.ssmmessages"
   private_dns_enabled = true
+  subnet_ids = [aws_subnet.private_subnet1.id]
   
   tags = {
     Name = "ssmmsg-endpoint"
