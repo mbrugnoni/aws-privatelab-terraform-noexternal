@@ -28,6 +28,20 @@ resource "aws_vpc_endpoint" "ssm" {
   }
 }
 
+# Add EC2 instance 
+resource "aws_instance" "lab_vm1" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+  
+  # Launch into private subnet
+  subnet_id = aws_subnet.private_subnet1.id
+
+  tags = {
+    Name = "Lab_VM1" 
+  }
+}
+
+
 # Create route table and add route for SSM endpoint  
 #resource "aws_route_table" "private_subnet_rt" {
 #  vpc_id = aws_vpc.lab-vpc01.id
