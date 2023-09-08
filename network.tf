@@ -71,38 +71,3 @@ resource "aws_vpc_endpoint" "ssmmsg" {
     Name = "ssmmsg-endpoint"
   }
 }
-
-
-# Add EC2 instance 
-resource "aws_instance" "lab_vm1" {
-  ami           = "ami-051f7e7f6c2f40dc1"
-  instance_type = "t2.micro"
-  iam_instance_profile = "AmazonSSMRoleForInstancesQuickSetup"
-    
-  # Launch into private subnet
-  subnet_id = aws_subnet.private_subnet1.id
-  
-  tags = {
-    Name = "Lab_VM1" 
-  }
-}
-
-
-# Create route table and add route for SSM endpoint  
-#resource "aws_route_table" "private_subnet_rt" {
-#  vpc_id = aws_vpc.lab-vpc01.id
-#  route {
-#    cidr_block  = "0.0.0.0/0"
-#    vpc_endpoint_id = aws_vpc_endpoint.ssm.id
-#  }
-#
-#  tags = {
-#    Name = "private-subnet-rt"
-#  }
-#}
-
-# Associate route table with private subnet
-#resource "aws_route_table_association" "private_assoc" {
-#  subnet_id      = aws_subnet.private_subnet1.id 
-#  route_table_id = aws_route_table.private_subnet_rt.id
-#}
